@@ -18,7 +18,9 @@ Ce projet implémente plusieurs algorithmes avancés de graphes, de tri et de st
 │   ├── ford_fulkerson.py  # Algorithme de Ford-Fulkerson
 │   ├── edmonds_karp.py    # Algorithme d'Edmonds-Karp
 │   ├── quicksort.py       # Tri rapide déterministe et randomisé
-│   └── avl.py             # Implémentation d'arbres AVL
+│   ├── avl.py             # Implémentation d'arbres AVL
+│   ├── sat.py             # Vérificateur SAT et résolution
+│   └── tsp.py             # Heuristiques pour le TSP
 └── README.md
 ```
 
@@ -149,6 +151,48 @@ Ce projet implémente plusieurs algorithmes avancés de graphes, de tri et de st
 - **vs Arbre Rouge-Noir** : Plus strictement équilibré mais plus de rotations
 - **vs B-arbres** : Mieux adapté pour la mémoire, B-arbres pour le stockage disque
 
+### Exercice 7 : Problèmes NP-complets et NP-difficiles
+
+#### Implémentations :
+- **Vérificateur SAT** : Vérification de satisfiabilité de formules booléennes
+- **Résolution SAT** : Algorithme de backtracking pour trouver une assignation
+- **Heuristique TSP** : Plus proche voisin pour le problème du voyageur de commerce
+- **TSP optimal** : Solution par force brute pour comparaison
+
+#### Concepts théoriques abordés :
+
+**NP-complet :**
+- Problèmes dans NP au moins aussi difficiles que tous les autres problèmes NP
+- SAT est le premier problème prouvé NP-complet (théorème de Cook)
+- Si P = NP, alors tous les problèmes NP-complets sont résolubles en temps polynomial
+
+**NP-difficile :**
+- Problèmes au moins aussi difficiles que les problèmes NP-complets
+- Incluent des problèmes d'optimisation comme le TSP
+- Peuvent ne pas être dans NP (problèmes de décision vs optimisation)
+
+#### Analyse de la complexité :
+
+**Vérificateur SAT :**
+- **Complexité temporelle** : O(c × l) où c = nombre de clauses, l = taille moyenne des clauses
+- **Complexité spatiale** : O(v) où v = nombre de variables
+
+**Résolution SAT (backtracking) :**
+- **Complexité temporelle** : O(2^n) dans le pire cas où n = nombre de variables
+- **Complexité spatiale** : O(n) pour la pile de récursion
+
+**Heuristique TSP (plus proche voisin) :**
+- **Complexité temporelle** : O(n²) où n = nombre de villes
+- **Complexité spatiale** : O(n)
+
+**TSP optimal (force brute) :**
+- **Complexité temporelle** : O(n!) où n = nombre de villes
+- **Complexité spatiale** : O(n)
+
+#### Applications pratiques :
+- **SAT** : Vérification de circuits, planification automatique, intelligence artificielle
+- **TSP** : Logistique, routage, optimisation de trajets
+
 ## Résultats d'Exécution
 
 Le programme teste tous les algorithmes sur des jeux de données prédéfinis et affiche :
@@ -163,6 +207,8 @@ Le programme teste tous les algorithmes sur des jeux de données prédéfinis et
 - **Bellman-Ford** : Gestion des poids négatifs
 - **Flot maximum** : 16 unités de A vers F
 - **AVL** : Démonstration du rééquilibrage automatique
+- **SAT** : Vérification de satisfiabilité sur formules booléennes
+- **TSP** : Comparaison heuristique vs solution optimale
 
 ## Utilisation
 
@@ -173,7 +219,7 @@ python3 main.py
 ## Dépendances
 
 - Python 3.x
-- Modules standard : `json`, `time`, `random`, `heapq`, `collections`
+- Modules standard : `json`, `time`, `random`, `heapq`, `collections`, `itertools`
 
 ## Auteur
 

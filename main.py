@@ -9,6 +9,8 @@ from algo.ford_fulkerson import ford_fulkerson
 from algo.edmonds_karp import edmonds_karp
 from algo.quicksort import deterministic_quicksort, randomized_quicksort
 from algo.avl import insert, delete, inorder, Node
+from algo.sat import parse_clause, verify_sat, solve_sat_backtrack
+from algo.tsp import nearest_neighbor_tsp, verify_tsp_solution, brute_force_tsp
 
 def load_graphs():
     with open("matrice.json", "r", encoding="utf-8") as f:
@@ -193,6 +195,81 @@ def test_avl():
         print(f"Après suppression de {key} => Infixe (valeur,hauteur) : {result}")
         print(f"Hauteur de la racine : {root.height}\n")
 
+def test_sat():
+    print("=== Vérificateur SAT ===")
+    clauses_str = [
+        "(A ∨ ¬B)",
+        "(B ∨ C ∨ ¬D)", 
+        "(¬A ∨ D)"
+    ]
+    
+    clauses = [parse_clause(clause) for clause in clauses_str]
+    variables = ['A', 'B', 'C', 'D']
+    
+    print("Clauses:")
+    for i, clause_str in enumerate(clauses_str, 1):
+        print(f"  {i}: {clause_str}")
+    
+    assignment_examples = [
+        {'A': True, 'B': False, 'C': True, 'D': True},
+        {'A': False, 'B': True, 'C': False, 'D': False},
+        {'A': True, 'B': True, 'C': True, 'D': False}
+    ]
+    
+    for i, assignment in enumerate(assignment_examples, 1):
+        t0 = time.perf_counter()
+        result = verify_sat(clauses, assignment)
+        t1 = time.perf_counter()
+        print(f"\nAssignation {i}: {assignment}")
+        print(f"Satisfiable: {result}")
+        print(f"Temps vérification: {(t1 - t0) * 1e3:.6f} ms")
+    
+    print("\n--- Résolution par backtracking ---")
+    t0 = time.perf_counter()
+    solvable = solve_sat_backtrack(clauses, variables)
+    t1 = time.perf_counter()
+    print(f"Formule satisfiable: {solvable}")
+    print(f"Temps résolution: {(t1 - t0) * 1e3:.6f} ms\n")
+
+def test_tsp():
+    print("=== Heuristique TSP (Problème du Voyageur de Commerce) ===")
+    distances = [
+        [0, 10, 15, 20],
+        [10, 0, 35, 25], 
+        [15, 35, 0, 30],
+        [20, 25, 30, 0]
+    ]
+    
+    cities = ['A', 'B', 'C', 'D']
+    print("Matrice des distances:")
+    print("    ", "  ".join(f"{city:>3}" for city in cities))
+    for i, row in enumerate(distances):
+        print(f"{cities[i]:>3} ", "  ".join(f"{dist:>3}" for dist in row))
+    
+    print("\n--- Heuristique du plus proche voisin ---")
+    t0 = time.perf_counter()
+    heuristic_path, heuristic_distance = nearest_neighbor_tsp(distances, 0)
+    t1 = time.perf_counter()
+    heuristic_path_cities = [cities[i] for i in heuristic_path]
+    print(f"Chemin heuristique: {' -> '.join(heuristic_path_cities)}")
+    print(f"Distance totale: {heuristic_distance}")
+    print(f"Temps heuristique: {(t1 - t0) * 1e3:.6f} ms")
+    
+    print(f"\nVérification solution (distance <= 100): {verify_tsp_solution(distances, heuristic_path, 100)}")
+    
+    print("\n--- Solution optimale (force brute) ---")
+    t0 = time.perf_counter()
+    optimal_path, optimal_distance = brute_force_tsp(distances)
+    t1 = time.perf_counter()
+    optimal_path_cities = [cities[i] for i in optimal_path]
+    print(f"Chemin optimal: {' -> '.join(optimal_path_cities)}")
+    print(f"Distance optimale: {optimal_distance}")
+    print(f"Temps force brute: {(t1 - t0) * 1e3:.6f} ms")
+    
+    ratio = heuristic_distance / optimal_distance
+    print(f"\nRatio heuristique/optimal: {ratio:.2f}")
+    print(f"Écart relatif: {(ratio - 1) * 100:.1f}%\n")
+
 def main():
     graphs = load_graphs()
     for gid, graph in graphs.items():
@@ -219,6 +296,10 @@ def main():
 
     print("\n***** Exercice 6 : Arbres AVL *****\n")
     test_avl()
+
+    print("\n***** Exercice 7 : Problèmes NP-complets et NP-difficiles *****\n")
+    test_sat()
+    test_tsp()
 
 if __name__ == "__main__":
     main()
