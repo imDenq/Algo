@@ -221,6 +221,8 @@ python3 main.py
 - Python 3.x
 - Modules standard : `json`, `time`, `random`, `heapq`, `collections`, `itertools`
 
-## Auteur
+## Auteurs
+
+JACQUES Paul-André, KASZAK Théo
 
 Projet réalisé dans le cadre du cours d'Algorithmie Avancée - ESGI B3 2024-2025
